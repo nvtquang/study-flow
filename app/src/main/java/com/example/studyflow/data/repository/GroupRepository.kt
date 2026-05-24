@@ -1,12 +1,13 @@
 package com.example.studyflow.data.repository
 
 import com.example.studyflow.data.model.StudyGroup
+import com.example.studyflow.util.FirebaseProvider
 import com.example.studyflow.util.awaitResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 
 class GroupRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseProvider.firestore()
 ) {
     fun listenUserGroups(
         userId: String,

@@ -2,13 +2,14 @@ package com.example.studyflow.data.repository
 
 import android.net.Uri
 import com.example.studyflow.data.model.StudyFile
+import com.example.studyflow.util.FirebaseProvider
 import com.example.studyflow.util.awaitResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
 class StorageRepository(
-    private val storage: FirebaseStorage = FirebaseStorage.getInstance(),
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val storage: FirebaseStorage = FirebaseProvider.storage(),
+    private val firestore: FirebaseFirestore = FirebaseProvider.firestore()
 ) {
     suspend fun uploadStudyFile(
         ownerUid: String,

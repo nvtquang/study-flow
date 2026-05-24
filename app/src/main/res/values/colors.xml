@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="studyflow_blue">#3B82F6</color>
+    <color name="studyflow_blue_dark">#1D4ED8</color>
+    <color name="studyflow_blue_soft">#DBEAFE</color>
+    <color name="studyflow_lavender">#A78BFA</color>
+    <color name="studyflow_lavender_light">#EDE9FE</color>
+    <color name="studyflow_background">#F7F5FF</color>
+    <color name="studyflow_surface">#FFFFFFFF</color>
+    <color name="studyflow_surface_alt">#F8FAFC</color>
+    <color name="studyflow_ink">#111827</color>
+    <color name="studyflow_muted_ink">#6B7280</color>
+    <color name="studyflow_divider">#E5E7EB</color>
+    <color name="studyflow_success">#22C55E</color>
+    <color name="studyflow_warning">#F59E0B</color>
+    <color name="studyflow_error">#EF4444</color>
+    <color name="studyflow_scrim">#33000000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

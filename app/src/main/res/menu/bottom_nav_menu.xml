@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_nav_home"
+        android:title="@string/bottom_nav_home" />
+
+    <item
+        android:id="@+id/plannerFragment"
+        android:icon="@drawable/ic_nav_planner"
+        android:title="@string/bottom_nav_planner" />
+
+    <item
+        android:id="@+id/aiFragment"
+        android:icon="@drawable/ic_nav_ai"
+        android:title="@string/bottom_nav_ai" />
+
+    <item
+        android:id="@+id/focusFragment"
+        android:icon="@drawable/ic_nav_focus"
+        android:title="@string/bottom_nav_focus" />
+
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_nav_profile"
+        android:title="@string/bottom_nav_profile" />
+</menu>

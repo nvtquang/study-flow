@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.studyflow.ui.fragment.SplashFragment"
+        android:label="@string/app_name" />
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.studyflow.ui.fragment.LoginFragment"
+        android:label="@string/login_title">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.studyflow.ui.fragment.RegisterFragment"
+        android:label="@string/register_title">
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_registerFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.studyflow.ui.fragment.HomeFragment"
+        android:label="@string/home_title">
+        <action
+            android:id="@+id/action_homeFragment_to_placeholderFragment"
+            app:destination="@id/placeholderFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_focusFragment"
+            app:destination="@id/focusFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aiFragment"
+            app:destination="@id/aiFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/focusFragment"
+        android:name="com.example.studyflow.ui.fragment.FocusFragment"
+        android:label="@string/focus_title" />
+
+    <fragment
+        android:id="@+id/aiFragment"
+        android:name="com.example.studyflow.ui.fragment.AiFragment"
+        android:label="@string/ai_title" />
+
+    <fragment
+        android:id="@+id/plannerFragment"
+        android:name="com.example.studyflow.ui.fragment.PlannerFragment"
+        android:label="@string/bottom_nav_planner">
+        <action
+            android:id="@+id/action_plannerFragment_to_addScheduleFragment"
+            app:destination="@id/addScheduleFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addScheduleFragment"
+        android:name="com.example.studyflow.ui.fragment.AddScheduleFragment"
+        android:label="@string/add_schedule_title" />
+
+    <fragment
+        android:id="@+id/groupsFragment"
+        android:name="com.example.studyflow.ui.fragment.GroupsFragment"
+        android:label="@string/bottom_nav_groups">
+        <action
+            android:id="@+id/action_groupsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.studyflow.ui.fragment.ChatFragment"
+        android:label="@string/chat_title">
+        <argument
+            android:name="groupId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/filesFragment"
+        android:name="com.example.studyflow.ui.fragment.FilesFragment"
+        android:label="@string/bottom_nav_files" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.studyflow.ui.fragment.ProfileFragment"
+        android:label="@string/bottom_nav_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_notificationSettingsFragment"
+            app:destination="@id/notificationSettingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/notificationSettingsFragment"
+        android:name="com.example.studyflow.ui.fragment.NotificationSettingsFragment"
+        android:label="@string/notification_settings_title" />
+
+    <fragment
+        android:id="@+id/placeholderFragment"
+        android:name="com.example.studyflow.ui.fragment.PlaceholderFragment"
+        android:label="@string/app_name">
+        <argument
+            android:name="screenTitle"
+            android:defaultValue="StudyFlow"
+            app:argType="string" />
+    </fragment>
+</navigation>

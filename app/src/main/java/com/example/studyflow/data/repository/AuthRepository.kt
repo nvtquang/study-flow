@@ -1,12 +1,13 @@
 package com.example.studyflow.data.repository
 
 import com.example.studyflow.data.model.UserProfile
+import com.example.studyflow.util.FirebaseProvider
 import com.example.studyflow.util.awaitResult
 import com.google.firebase.auth.FirebaseAuth
 
 class AuthRepository {
     private val auth: FirebaseAuth
-        get() = FirebaseAuth.getInstance()
+        get() = FirebaseProvider.auth()
     private val userRepository by lazy { UserRepository() }
 
     fun currentUserId(): String? {

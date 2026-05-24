@@ -1,11 +1,12 @@
 package com.example.studyflow.data.repository
 
 import com.example.studyflow.data.model.StudyTask
+import com.example.studyflow.util.FirebaseProvider
 import com.example.studyflow.util.awaitResult
 import com.google.firebase.firestore.FirebaseFirestore
 
 class TaskRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseProvider.firestore()
 ) {
     suspend fun getTasksByDate(userId: String, date: String): List<StudyTask> {
         val snapshot = firestore.collection(TASKS_COLLECTION)

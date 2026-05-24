@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="studyflow_blue">#60A5FA</color>
+    <color name="studyflow_blue_dark">#3B82F6</color>
+    <color name="studyflow_blue_soft">#1E3A8A</color>
+    <color name="studyflow_lavender">#C4B5FD</color>
+    <color name="studyflow_lavender_light">#312E81</color>
+    <color name="studyflow_background">#0F172A</color>
+    <color name="studyflow_surface">#111827</color>
+    <color name="studyflow_surface_alt">#1F2937</color>
+    <color name="studyflow_ink">#F9FAFB</color>
+    <color name="studyflow_muted_ink">#CBD5E1</color>
+    <color name="studyflow_divider">#374151</color>
+    <color name="studyflow_success">#4ADE80</color>
+    <color name="studyflow_warning">#FBBF24</color>
+    <color name="studyflow_error">#F87171</color>
+    <color name="studyflow_scrim">#66000000</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

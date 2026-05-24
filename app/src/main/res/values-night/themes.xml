@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.StudyFlow" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/studyflow_blue</item>
+        <item name="colorPrimaryVariant">@color/studyflow_blue_dark</item>
+        <item name="colorSecondary">@color/studyflow_lavender</item>
+        <item name="colorError">@color/studyflow_error</item>
+        <item name="colorSurface">@color/studyflow_surface</item>
+        <item name="android:textColorPrimary">@color/studyflow_ink</item>
+        <item name="android:textColorSecondary">@color/studyflow_muted_ink</item>
+        <item name="android:colorAccent">@color/studyflow_lavender</item>
+        <item name="android:windowBackground">@color/studyflow_background</item>
+        <item name="android:navigationBarColor">@color/studyflow_surface</item>
+        <item name="android:statusBarColor">@color/studyflow_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="materialButtonStyle">@style/Widget.StudyFlow.Button</item>
+        <item name="textInputStyle">@style/Widget.StudyFlow.TextInputLayout</item>
+        <item name="floatingActionButtonStyle">@style/Widget.StudyFlow.FloatingActionButton</item>
+        <item name="bottomNavigationStyle">@style/Widget.StudyFlow.BottomNavigation</item>
+    </style>
+</resources>
