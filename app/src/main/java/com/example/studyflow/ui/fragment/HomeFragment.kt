@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -59,13 +58,21 @@ class HomeFragment : Fragment() {
 
     private fun bindActions() {
         binding.retryButton.setOnClickListener { homeViewModel.loadHome() }
-        binding.addScheduleButton.setOnClickListener { openPlaceholder(getString(R.string.quick_add_schedule)) }
-        binding.plannerButton.setOnClickListener { openPlaceholder(getString(R.string.quick_planner)) }
+        binding.addScheduleButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_addScheduleFragment)
+        }
+        binding.plannerButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_plannerFragment)
+        }
         binding.focusButton.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_focusFragment)
         }
-        binding.groupsButton.setOnClickListener { openPlaceholder(getString(R.string.quick_groups)) }
-        binding.filesButton.setOnClickListener { openPlaceholder(getString(R.string.quick_files)) }
+        binding.groupsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_groupsFragment)
+        }
+        binding.filesButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_filesFragment)
+        }
         binding.aiButton.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_aiFragment)
         }
@@ -120,13 +127,6 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private fun openPlaceholder(title: String) {
-        findNavController().navigate(
-            R.id.action_homeFragment_to_placeholderFragment,
-            bundleOf(ARG_SCREEN_TITLE to title)
-        )
-    }
-
     override fun onDestroyView() {
         binding.timelineRecyclerView.adapter = null
         binding.activityRecyclerView.adapter = null
@@ -144,7 +144,4 @@ class HomeFragment : Fragment() {
         return parts.joinToString("") { it.first().uppercase() }
     }
 
-    private companion object {
-        const val ARG_SCREEN_TITLE = "screenTitle"
-    }
 }

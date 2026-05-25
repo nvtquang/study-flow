@@ -44,6 +44,18 @@
         android:name="com.example.studyflow.ui.fragment.HomeFragment"
         android:label="@string/home_title">
         <action
+            android:id="@+id/action_homeFragment_to_addScheduleFragment"
+            app:destination="@id/addScheduleFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_plannerFragment"
+            app:destination="@id/plannerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_groupsFragment"
+            app:destination="@id/groupsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_filesFragment"
+            app:destination="@id/filesFragment" />
+        <action
             android:id="@+id/action_homeFragment_to_placeholderFragment"
             app:destination="@id/placeholderFragment" />
         <action
