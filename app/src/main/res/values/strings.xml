@@ -119,4 +119,7 @@
     <string name="notif_group_chat">Thông báo nhóm</string>
     <string name="notif_daily_summary">Tổng kết hằng ngày</string>
     <string name="notif_summary_time">Giờ tổng kết</string>
+    <string name="logout_confirm_title">Xác nhận đăng xuất</string>
+    <string name="logout_confirm_message">Bạn có muốn đăng xuất khỏi StudyFlow không?</string>
+    <string name="logout_confirm_action">Đăng xuất</string>
 </resources>

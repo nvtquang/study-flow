@@ -50,8 +50,7 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profileFragment_to_notificationSettingsFragment)
         }
         binding.logoutButton.setOnClickListener {
-            authViewModel.signOut()
-            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+            showLogoutConfirmationDialog()
         }
     }
 
@@ -106,6 +105,18 @@ class ProfileFragment : Fragment() {
             }
         }
         dialog.show()
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.logout_confirm_title)
+            .setMessage(R.string.logout_confirm_message)
+            .setNegativeButton(R.string.action_cancel, null)
+            .setPositiveButton(R.string.logout_confirm_action) { _, _ ->
+                authViewModel.signOut()
+                findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+            }
+            .show()
     }
 
     private fun String.initials(): String {
