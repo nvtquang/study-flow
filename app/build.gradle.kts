@@ -40,6 +40,11 @@ android {
             "GEMINI_API_KEY",
             (localProperties.getProperty("GEMINI_API_KEY") ?: "").asBuildConfigString()
         )
+        buildConfigField(
+            "String",
+            "GEMINI_MODEL",
+            (localProperties.getProperty("GEMINI_MODEL") ?: "gemini-2.5-flash").asBuildConfigString()
+        )
     }
 
     buildTypes {

@@ -5,6 +5,7 @@ import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
@@ -16,7 +17,24 @@ class GeminiAiRepository : AiRepository {
             "Chua cau hinh GEMINI_API_KEY trong local.properties."
         }
 
-        val connection = (URL(GEMINI_ENDPOINT).openConnection() as HttpURLConnection).apply {
+        var lastError: Throwable? = null
+        for (model in modelCandidates()) {
+            runCatching {
+                return@withContext askModel(apiKey, model, question)
+            }.onFailure { throwable ->
+                lastError = throwable
+                if (!throwable.isRetryableGeminiError()) {
+                    throw throwable
+                }
+                delay(700L)
+            }
+        }
+
+        throw lastError ?: IllegalStateException("Khong the nhan phan hoi tu Gemini.")
+    }
+
+    private fun askModel(apiKey: String, model: String, question: String): String {
+        val connection = (URL(endpointFor(model)).openConnection() as HttpURLConnection).apply {
             requestMethod = "POST"
             connectTimeout = 20_000
             readTimeout = 40_000
@@ -38,10 +56,13 @@ class GeminiAiRepository : AiRepository {
             }
 
             if (statusCode !in 200..299) {
-                error(parseErrorMessage(responseText).ifBlank { "Gemini loi HTTP $statusCode." })
+                throw GeminiApiException(
+                    statusCode = statusCode,
+                    message = parseErrorMessage(responseText).ifBlank { "Gemini loi HTTP $statusCode." }
+                )
             }
 
-            parseAnswer(responseText)
+            return parseAnswer(responseText)
         } finally {
             connection.disconnect()
         }
@@ -114,8 +135,35 @@ class GeminiAiRepository : AiRepository {
         }.getOrDefault("")
     }
 
+    private fun modelCandidates(): List<String> {
+        val configuredModel = BuildConfig.GEMINI_MODEL.trim().ifBlank { DEFAULT_MODEL }
+        return listOf(
+            configuredModel,
+            "gemini-2.5-flash-lite",
+            "gemini-2.0-flash"
+        ).distinct()
+    }
+
+    private fun endpointFor(model: String): String {
+        return "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"
+    }
+
+    private fun Throwable.isRetryableGeminiError(): Boolean {
+        val apiException = this as? GeminiApiException ?: return false
+        val normalized = apiException.message.orEmpty().lowercase()
+        return apiException.statusCode == 503 ||
+            apiException.statusCode == 429 ||
+            "high demand" in normalized ||
+            "overloaded" in normalized ||
+            "unavailable" in normalized
+    }
+
+    private class GeminiApiException(
+        val statusCode: Int,
+        message: String
+    ) : IllegalStateException(message)
+
     private companion object {
-        const val GEMINI_ENDPOINT =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+        const val DEFAULT_MODEL = "gemini-2.5-flash"
     }
 }
