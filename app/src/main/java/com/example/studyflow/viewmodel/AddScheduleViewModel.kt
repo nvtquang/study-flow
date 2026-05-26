@@ -20,7 +20,35 @@ class AddScheduleViewModel(
     private val _uiState = MutableStateFlow(AddScheduleUiState())
     val uiState: StateFlow<AddScheduleUiState> = _uiState.asStateFlow()
 
+    fun startEdit(
+        entryId: String,
+        entryType: AddEntryType,
+        title: String,
+        date: String,
+        startTime: String,
+        endTime: String,
+        location: String,
+        note: String,
+        isCompleted: Boolean
+    ) {
+        if (_uiState.value.isEditing) return
+        _uiState.value = _uiState.value.copy(
+            entryId = entryId,
+            isEditing = true,
+            entryType = entryType,
+            title = title,
+            date = date,
+            startTime = startTime,
+            endTime = endTime,
+            location = location,
+            note = note,
+            isCompleted = isCompleted,
+            message = null
+        )
+    }
+
     fun selectType(type: AddEntryType) {
+        if (_uiState.value.isEditing) return
         _uiState.value = _uiState.value.copy(entryType = type, message = null)
     }
 
@@ -60,45 +88,56 @@ class AddScheduleViewModel(
         viewModelScope.launch {
             runCatching {
                 val userId = authRepository.currentUserId()
-                    ?: error("Bạn cần đăng nhập để lưu lịch trình.")
+                    ?: error("Ban can dang nhap de luu lich trinh.")
+
                 if (current.entryType == AddEntryType.Schedule) {
-                    scheduleRepository.addSchedule(
-                        StudySchedule(
-                            userId = userId,
-                            title = current.title.trim(),
-                            eventType = "Bài giảng",
-                            date = current.date,
-                            startTime = current.startTime,
-                            endTime = current.endTime,
-                            location = current.location.trim(),
-                            note = current.note.trim()
-                        )
+                    val schedule = StudySchedule(
+                        id = current.entryId,
+                        userId = userId,
+                        title = current.title.trim(),
+                        eventType = "Bai giang",
+                        date = current.date,
+                        startTime = current.startTime,
+                        endTime = current.endTime,
+                        location = current.location.trim(),
+                        note = current.note.trim(),
+                        isCompleted = current.isCompleted
                     )
+                    if (current.isEditing) {
+                        scheduleRepository.updateSchedule(schedule)
+                    } else {
+                        scheduleRepository.addSchedule(schedule.copy(id = ""))
+                    }
                 } else {
-                    taskRepository.addTask(
-                        StudyTask(
-                            userId = userId,
-                            title = current.title.trim(),
-                            eventType = "Hạn chót",
-                            date = current.date,
-                            startTime = current.startTime,
-                            endTime = current.endTime,
-                            location = current.location.trim(),
-                            note = current.note.trim()
-                        )
+                    val task = StudyTask(
+                        id = current.entryId,
+                        userId = userId,
+                        title = current.title.trim(),
+                        eventType = "Han chot",
+                        date = current.date,
+                        startTime = current.startTime,
+                        endTime = current.endTime,
+                        location = current.location.trim(),
+                        note = current.note.trim(),
+                        isCompleted = current.isCompleted
                     )
+                    if (current.isEditing) {
+                        taskRepository.updateTask(task)
+                    } else {
+                        taskRepository.addTask(task.copy(id = ""))
+                    }
                 }
             }.onSuccess {
                 _uiState.value = _uiState.value.copy(
                     isSaving = false,
                     saveSuccess = true,
-                    message = "Đã lưu thành công."
+                    message = "Da luu thanh cong."
                 )
             }.onFailure { throwable ->
                 _uiState.value = _uiState.value.copy(
                     isSaving = false,
                     saveSuccess = false,
-                    message = throwable.message ?: "Không thể lưu dữ liệu."
+                    message = throwable.message ?: "Khong the luu du lieu."
                 )
             }
         }
@@ -110,11 +149,11 @@ class AddScheduleViewModel(
 
     private fun validate(state: AddScheduleUiState): String? {
         return when {
-            state.title.trim().isBlank() -> "Vui lòng nhập tên."
-            state.date.isBlank() -> "Vui lòng chọn ngày."
-            state.startTime.isBlank() -> "Vui lòng chọn giờ bắt đầu."
-            state.endTime.isBlank() -> "Vui lòng chọn giờ kết thúc."
-            state.location.trim().isBlank() -> "Vui lòng nhập địa điểm."
+            state.title.trim().isBlank() -> "Vui long nhap ten."
+            state.date.isBlank() -> "Vui long chon ngay."
+            state.startTime.isBlank() -> "Vui long chon gio bat dau."
+            state.endTime.isBlank() -> "Vui long chon gio ket thuc."
+            state.location.trim().isBlank() -> "Vui long nhap dia diem."
             else -> null
         }
     }

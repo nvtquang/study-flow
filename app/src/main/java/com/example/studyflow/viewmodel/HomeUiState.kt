@@ -1,6 +1,8 @@
 package com.example.studyflow.viewmodel
 
 import com.example.studyflow.data.model.UserProfile
+import com.example.studyflow.data.model.StudySchedule
+import com.example.studyflow.data.model.StudyTask
 
 data class HomeUiState(
     val isLoading: Boolean = true,
@@ -21,6 +23,57 @@ data class HomeDashboardData(
     val timeline: List<DashboardTimelineItem>
 ) {
     companion object {
+        fun fromPlannerData(
+            todaySchedules: List<StudySchedule>,
+            todayTasks: List<StudyTask>,
+            weekSchedules: List<StudySchedule>,
+            weekTasks: List<StudyTask>
+        ): HomeDashboardData {
+            val todayEntries = todaySchedules.size + todayTasks.size
+            val remainingEntries = todaySchedules.count { !it.isCompleted } + todayTasks.count { !it.isCompleted }
+            val weekTotal = weekSchedules.size + weekTasks.size
+            val weekCompleted = weekSchedules.count { it.isCompleted } + weekTasks.count { it.isCompleted }
+            val nextSchedule = todaySchedules
+                .filter { !it.isCompleted }
+                .minByOrNull { it.startTime }
+            val urgentDeadline = todayTasks
+                .filter { !it.isCompleted }
+                .minByOrNull { it.endTime.ifBlank { it.startTime } }
+            val timeline = todaySchedules
+                .sortedBy { it.startTime }
+                .map { DashboardTimelineItem(it.startTime, it.title) }
+            val recentActivities = buildList {
+                add("Da hoan thanh $weekCompleted/$weekTotal muc trong tuan")
+                if (remainingEntries == 0 && todayEntries > 0) {
+                    add("Tat ca nhiem vu hom nay da hoan thanh")
+                } else {
+                    add("Con $remainingEntries muc can xu ly hom nay")
+                }
+                urgentDeadline?.let { add("Deadline gan nhat: ${it.title}") }
+            }
+
+            return HomeDashboardData(
+                urgentDeadline = DashboardDeadline(
+                    title = urgentDeadline?.title ?: "Khong co deadline",
+                    dueText = urgentDeadline?.let { task ->
+                        "Han: ${task.endTime.ifBlank { task.startTime }}"
+                    } ?: "Hom nay",
+                    priority = if (urgentDeadline == null) "On track" else "Gap"
+                ),
+                nextSchedule = DashboardSchedule(
+                    time = nextSchedule?.startTime ?: "--:--",
+                    title = nextSchedule?.title ?: "Khong co lich sap toi",
+                    location = nextSchedule?.location.orEmpty()
+                ),
+                remainingCount = remainingEntries,
+                taskCount = todayEntries,
+                recentActivities = recentActivities,
+                pomodoroProgress = 0.72f,
+                weeklyGoalProgress = if (weekTotal == 0) 0f else weekCompleted.toFloat() / weekTotal,
+                timeline = timeline
+            )
+        }
+
         fun mock(): HomeDashboardData = HomeDashboardData(
             urgentDeadline = DashboardDeadline(
                 title = "Nộp bài Android MVVM",

@@ -35,16 +35,20 @@ class ChatViewModel(
         viewModelScope.launch {
             runCatching {
                 val userId = authRepository.currentUserId()
-                    ?: error("Bạn cần đăng nhập để chat.")
+                    ?: error("Ban can dang nhap de chat.")
                 val profile = userRepository.getUserProfile(userId)
                 val group = groupRepository.getGroup(groupId)
-                    ?: error("Không tìm thấy nhóm.")
-                Triple(userId, profile?.displayName.orEmpty().ifBlank { "Bạn" }, group)
+                    ?: error("Khong tim thay nhom.")
+                if (userId !in group.memberIds) {
+                    error("Ban can tham gia nhom truoc khi chat.")
+                }
+                Triple(userId, profile?.displayName.orEmpty().ifBlank { "Ban" }, group)
             }.onSuccess { (userId, userName, group) ->
                 _uiState.value = _uiState.value.copy(
                     currentUserId = userId,
                     currentUserName = userName,
                     group = group,
+                    isCurrentUserMember = true,
                     isLoading = false,
                     errorMessage = null
                 )
@@ -52,7 +56,7 @@ class ChatViewModel(
             }.onFailure { throwable ->
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    errorMessage = throwable.message ?: "Không thể mở cuộc trò chuyện."
+                    errorMessage = throwable.message ?: "Khong the mo cuoc tro chuyen."
                 )
             }
         }
@@ -66,7 +70,7 @@ class ChatViewModel(
         val current = _uiState.value
         val text = current.input.trim()
         val groupId = current.group?.id.orEmpty()
-        if (text.isBlank() || groupId.isBlank()) return
+        if (text.isBlank() || groupId.isBlank() || !current.isCurrentUserMember) return
 
         _uiState.value = current.copy(input = "")
         viewModelScope.launch {
@@ -81,7 +85,7 @@ class ChatViewModel(
                 )
             }.onFailure { throwable ->
                 _uiState.value = _uiState.value.copy(
-                    message = throwable.message ?: "Không thể gửi tin nhắn."
+                    message = throwable.message ?: "Khong the gui tin nhan."
                 )
             }
         }
@@ -99,7 +103,7 @@ class ChatViewModel(
             },
             onError = { throwable ->
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = throwable.message ?: "Không thể tải tin nhắn.",
+                    errorMessage = throwable.message ?: "Khong the tai tin nhan.",
                     isLoading = false
                 )
             }

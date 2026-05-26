@@ -40,8 +40,32 @@ class AddScheduleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        applyEditArguments()
         bindActions()
         collectAddScheduleState()
+    }
+
+    private fun applyEditArguments() {
+        val args = arguments ?: return
+        val entryId = args.getString(ARG_ENTRY_ID).orEmpty()
+        if (entryId.isBlank()) return
+
+        val entryType = if (args.getString(ARG_ENTRY_KIND) == PlannerEntryKind.Task.name) {
+            AddEntryType.Deadline
+        } else {
+            AddEntryType.Schedule
+        }
+        addScheduleViewModel.startEdit(
+            entryId = entryId,
+            entryType = entryType,
+            title = args.getString(ARG_TITLE).orEmpty(),
+            date = args.getString(ARG_DATE).orEmpty(),
+            startTime = args.getString(ARG_START_TIME).orEmpty(),
+            endTime = args.getString(ARG_END_TIME).orEmpty(),
+            location = args.getString(ARG_LOCATION).orEmpty(),
+            note = args.getString(ARG_NOTE).orEmpty(),
+            isCompleted = args.getBoolean(ARG_COMPLETED)
+        )
     }
 
     private fun bindActions() {
@@ -82,6 +106,11 @@ class AddScheduleFragment : Fragment() {
         binding.dateEditText.setText(state.date)
         binding.startTimeEditText.setText(state.startTime)
         binding.endTimeEditText.setText(state.endTime)
+        binding.titleEditText.setText(state.title)
+        binding.locationEditText.setText(state.location)
+        binding.noteEditText.setText(state.note)
+        binding.scheduleRadioButton.isEnabled = !state.isEditing
+        binding.deadlineRadioButton.isEnabled = !state.isEditing
         rendering = false
 
         binding.saveButton.isEnabled = !state.isSaving
@@ -161,6 +190,15 @@ class AddScheduleFragment : Fragment() {
 
     private companion object {
         const val KEY_REFRESH = "planner_refresh"
+        const val ARG_ENTRY_ID = "entry_id"
+        const val ARG_ENTRY_KIND = "entry_kind"
+        const val ARG_TITLE = "title"
+        const val ARG_DATE = "date"
+        const val ARG_START_TIME = "start_time"
+        const val ARG_END_TIME = "end_time"
+        const val ARG_LOCATION = "location"
+        const val ARG_NOTE = "note"
+        const val ARG_COMPLETED = "completed"
         val TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     }
 }

@@ -85,7 +85,10 @@ class ChatFragment : Fragment() {
             binding.messageEditText.setText(state.input)
             binding.messageEditText.setSelection(binding.messageEditText.text?.length ?: 0)
         }
-        binding.sendButton.isEnabled = state.input.trim().isNotBlank() && !state.isLoading
+        binding.sendButton.isEnabled = state.input.trim().isNotBlank() &&
+            !state.isLoading &&
+            state.isCurrentUserMember
+        binding.messageEditText.isEnabled = state.isCurrentUserMember && state.errorMessage == null
 
         val oldCount = messageAdapter.itemCount
         messageAdapter.submitList(state.messages, state.currentUserId)

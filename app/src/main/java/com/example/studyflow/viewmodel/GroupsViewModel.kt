@@ -36,12 +36,16 @@ class GroupsViewModel(
             return
         }
 
-        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-        registration = groupRepository.listenUserGroups(
-            userId = userId,
+        _uiState.value = _uiState.value.copy(
+            currentUserId = userId,
+            isLoading = true,
+            errorMessage = null
+        )
+        registration = groupRepository.listenGroups(
             onResult = { groups ->
                 _uiState.value = _uiState.value.copy(
                     groups = groups,
+                    currentUserId = userId,
                     isLoading = false,
                     errorMessage = null
                 )
@@ -57,6 +61,14 @@ class GroupsViewModel(
 
     fun updateQuery(value: String) {
         _uiState.value = _uiState.value.copy(query = value)
+    }
+
+    fun joinGroup(groupId: String) {
+        updateMembership(groupId, shouldJoin = true)
+    }
+
+    fun leaveGroup(groupId: String) {
+        updateMembership(groupId, shouldJoin = false)
     }
 
     fun createGroup(name: String, description: String) {
@@ -93,6 +105,34 @@ class GroupsViewModel(
 
     fun clearMessage() {
         _uiState.value = _uiState.value.copy(message = null)
+    }
+
+    private fun updateMembership(groupId: String, shouldJoin: Boolean) {
+        if (groupId.isBlank()) return
+        _uiState.value = _uiState.value.copy(activeGroupActionId = groupId, message = null)
+        viewModelScope.launch {
+            runCatching {
+                val userId = authRepository.currentUserId()
+                    ?: error("Ban can dang nhap de cap nhat nhom.")
+                val profile = userRepository.getUserProfile(userId)
+                val userName = profile?.displayName.orEmpty().ifBlank { "Ban" }
+                if (shouldJoin) {
+                    groupRepository.joinGroup(groupId, userId, userName)
+                } else {
+                    groupRepository.leaveGroup(groupId, userId, userName)
+                }
+            }.onSuccess {
+                _uiState.value = _uiState.value.copy(
+                    activeGroupActionId = null,
+                    message = if (shouldJoin) "Da tham gia nhom." else "Da roi khoi nhom."
+                )
+            }.onFailure { throwable ->
+                _uiState.value = _uiState.value.copy(
+                    activeGroupActionId = null,
+                    message = throwable.message ?: "Khong the cap nhat nhom."
+                )
+            }
+        }
     }
 
     override fun onCleared() {

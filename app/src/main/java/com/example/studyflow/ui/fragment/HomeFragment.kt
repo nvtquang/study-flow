@@ -43,6 +43,11 @@ class HomeFragment : Fragment() {
         collectHomeState()
     }
 
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.loadHome()
+    }
+
     private fun setupLists() {
         binding.timelineRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

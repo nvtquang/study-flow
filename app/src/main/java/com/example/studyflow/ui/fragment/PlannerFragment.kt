@@ -1,5 +1,6 @@
 package com.example.studyflow.ui.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +24,17 @@ class PlannerFragment : Fragment() {
     private var _binding: FragmentPlannerBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val plannerViewModel: PlannerViewModel by viewModels()
-    private val plannerEntryAdapter = PlannerEntryAdapter()
+    private val plannerEntryAdapter = PlannerEntryAdapter(
+        onCompletionChanged = { entry ->
+            plannerViewModel.setCompletion(
+                entryId = entry.id,
+                isSchedule = entry.kind == PlannerEntryKind.Schedule,
+                isCompleted = entry.isCompleted
+            )
+        },
+        onEdit = ::openEditEntry,
+        onDelete = ::confirmDeleteEntry
+    )
     private var datesBound = false
 
     override fun onCreateView(
@@ -120,6 +131,34 @@ class PlannerFragment : Fragment() {
         }
     }
 
+    private fun openEditEntry(entry: PlannerEntry) {
+        val args = Bundle().apply {
+            putString(ARG_ENTRY_ID, entry.id)
+            putString(ARG_ENTRY_KIND, entry.kind.name)
+            putString(ARG_TITLE, entry.title)
+            putString(ARG_DATE, entry.date)
+            putString(ARG_START_TIME, entry.startTime)
+            putString(ARG_END_TIME, entry.endTime)
+            putString(ARG_LOCATION, entry.location)
+            putString(ARG_NOTE, entry.note)
+            putBoolean(ARG_COMPLETED, entry.isCompleted)
+        }
+        findNavController().navigate(R.id.action_plannerFragment_to_addScheduleFragment, args)
+    }
+
+    private fun confirmDeleteEntry(entry: PlannerEntry) {
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.delete_schedule_message)
+            .setNegativeButton(R.string.action_cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ ->
+                plannerViewModel.deleteEntry(
+                    entryId = entry.id,
+                    isSchedule = entry.kind == PlannerEntryKind.Schedule
+                )
+            }
+            .show()
+    }
+
     override fun onDestroyView() {
         binding.plannerRecyclerView.adapter = null
         super.onDestroyView()
@@ -128,5 +167,14 @@ class PlannerFragment : Fragment() {
 
     private companion object {
         const val KEY_REFRESH = "planner_refresh"
+        const val ARG_ENTRY_ID = "entry_id"
+        const val ARG_ENTRY_KIND = "entry_kind"
+        const val ARG_TITLE = "title"
+        const val ARG_DATE = "date"
+        const val ARG_START_TIME = "start_time"
+        const val ARG_END_TIME = "end_time"
+        const val ARG_LOCATION = "location"
+        const val ARG_NOTE = "note"
+        const val ARG_COMPLETED = "completed"
     }
 }

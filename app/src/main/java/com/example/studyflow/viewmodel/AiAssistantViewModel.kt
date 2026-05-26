@@ -4,14 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studyflow.data.model.AiMessage
 import com.example.studyflow.data.repository.AiRepository
-import com.example.studyflow.data.repository.MockAiRepository
+import com.example.studyflow.data.repository.GeminiAiRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AiAssistantViewModel(
-    private val aiRepository: AiRepository = MockAiRepository()
+    private val aiRepository: AiRepository = GeminiAiRepository()
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AiAssistantUiState())
     val uiState: StateFlow<AiAssistantUiState> = _uiState.asStateFlow()

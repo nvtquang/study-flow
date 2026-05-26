@@ -9,9 +9,17 @@
     android:orientation="horizontal"
     android:padding="16dp">
 
+    <CheckBox
+        android:id="@+id/completedCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/studyflow_blue"
+        android:contentDescription="@string/action_complete" />
+
     <LinearLayout
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/bg_studyflow_stat"
         android:gravity="center"
         android:orientation="vertical">
@@ -70,5 +78,34 @@
             android:maxLines="2"
             android:textColor="@color/studyflow_muted_ink"
             android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/editButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:minWidth="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/action_edit"
+                android:textColor="@color/studyflow_blue" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:minWidth="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/action_delete"
+                android:textColor="@color/studyflow_error" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

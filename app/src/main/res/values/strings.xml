@@ -55,6 +55,10 @@
     <string name="hint_end_time">Giờ kết thúc</string>
     <string name="action_save">Lưu</string>
     <string name="action_cancel">Hủy</string>
+    <string name="action_complete">Hoàn thành</string>
+    <string name="action_edit">Sửa</string>
+    <string name="action_delete">Xóa</string>
+    <string name="delete_schedule_message">Xóa mục này khỏi lịch học?</string>
     <string name="loading_save">Đang lưu...</string>
     <string name="groups_title">Nhóm học tập</string>
     <string name="groups_subtitle">Trao đổi bài học và làm việc nhóm.</string>

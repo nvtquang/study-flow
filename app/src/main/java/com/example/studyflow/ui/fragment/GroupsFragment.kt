@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.studyflow.R
+import com.example.studyflow.data.model.StudyGroup
 import com.example.studyflow.databinding.DialogCreateGroupBinding
 import com.example.studyflow.databinding.FragmentGroupsBinding
 import com.example.studyflow.viewmodel.GroupsUiState
@@ -27,12 +28,11 @@ class GroupsFragment : Fragment() {
     private var _binding: FragmentGroupsBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val groupsViewModel: GroupsViewModel by viewModels()
-    private val groupAdapter = GroupAdapter { group ->
-        findNavController().navigate(
-            R.id.action_groupsFragment_to_chatFragment,
-            bundleOf(ARG_GROUP_ID to group.id)
-        )
-    }
+    private val groupAdapter = GroupAdapter(
+        onGroupClick = ::openChat,
+        onJoinClick = { group -> groupsViewModel.joinGroup(group.id) },
+        onLeaveClick = ::confirmLeaveGroup
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,7 +86,25 @@ class GroupsFragment : Fragment() {
 
         val groups = state.filteredGroups
         binding.emptyTextView.isVisible = !state.isLoading && state.errorMessage == null && groups.isEmpty()
-        groupAdapter.submitList(groups)
+        groupAdapter.submitList(groups, state.currentUserId, state.activeGroupActionId)
+    }
+
+    private fun openChat(group: StudyGroup) {
+        findNavController().navigate(
+            R.id.action_groupsFragment_to_chatFragment,
+            bundleOf(ARG_GROUP_ID to group.id)
+        )
+    }
+
+    private fun confirmLeaveGroup(group: StudyGroup) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Roi nhom")
+            .setMessage("Ban co muon roi khoi nhom ${group.name}?")
+            .setNegativeButton(R.string.action_cancel, null)
+            .setPositiveButton("Roi nhom") { _, _ ->
+                groupsViewModel.leaveGroup(group.id)
+            }
+            .show()
     }
 
     private fun showCreateGroupDialog() {

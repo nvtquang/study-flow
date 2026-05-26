@@ -10,5 +10,6 @@ data class StudySchedule(
     val endTime: String = "",
     val location: String = "",
     val note: String = "",
+    val isCompleted: Boolean = false,
     val createdAt: Long = System.currentTimeMillis()
 )
